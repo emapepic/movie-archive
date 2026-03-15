@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #172134;
+  --foreground: #d3d2d2;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-dark-blue: #1a263c;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,6 +17,17 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+  }
+}
+
+@layer base {
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  button {
+    cursor: pointer;
   }
 }
 
