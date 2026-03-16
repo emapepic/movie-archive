@@ -25,7 +25,7 @@ export default function LoginPage() {
         if (error) {
             alert("Greška pri prijavi: " + error.message);
         } else {
-            router.push("/home");
+            router.push("/");
         }
 
         setLoading(false);

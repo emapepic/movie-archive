@@ -40,17 +40,19 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user && request.nextUrl.pathname.startsWith('/home')) {
+  const protectedRoutes = ['/']
+
+  if (!user && protectedRoutes.includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
-    return NextResponse.redirect(new URL('/home', request.url))
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   return response
 }
 
 export const config = {
-  matcher: ['/home/:path*', '/login', '/register'],
+  matcher: ['/', '/login', '/register'],
 }
