@@ -1,27 +1,17 @@
-"use client"; 
+import { getMovies } from "@/lib/tmdb";
+import Image from 'next/image';
 
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
-
-export default function Homepage() {
-    const supabase = createClient();
-    const router = useRouter();
-
-    const handleLogout = async () => {
-        const { error } = await supabase.auth.signOut();
-
-        if (error) {
-            alert("Greška: " + error.message);
-        } else {
-            router.refresh(); 
-            router.push("/login");
-        }
-    };
-
+export default async function Homepage() {
+    const movies = await getMovies();
     return (
-        <div>
-            <h1>LOGGED IN</h1>
-            <button onClick={handleLogout}>Logout</button>
-        </div>
+        <section>
+                {movies.results.map(movie => (
+                    <div key={movie.id}>
+                        <Image src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}  alt={movie.title} width={100} height={100} />
+                        <p>{movie.title}</p>
+                    </div>                  
+                )
+                )}
+        </section>
     );
 }
