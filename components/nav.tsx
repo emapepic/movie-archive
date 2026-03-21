@@ -1,6 +1,7 @@
 'use client';
 
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Nav() {
@@ -19,11 +20,20 @@ export default function Nav() {
     };
 
     return (
-        <nav className='flex flex-row list-none gap-4 cursor-pointer'>
-            <li>Movies</li>
+        <nav className='flex flex-row gap-4 cursor-pointer'>
+          <ul className='flex flex-row list-none gap-4'>
+            <li className="relative group">
+              Movies
+              <ul>
+                <li className="absolute left-0 hidden group-hover:block">
+                  <Link href="/add-entry">Add movie</Link>
+                </li>
+              </ul>
+            </li>
             <li>Series</li>
             <li>Watchlist</li>
-            <button onClick={handleLogout}>Logout</button>
+          </ul>
+          <button onClick={handleLogout}>Logout</button>
         </nav>
     );
 }
