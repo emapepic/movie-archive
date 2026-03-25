@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
-import { searchMovies, Movie } from "@/lib/tmdb";
+import { Movie } from "@/types/tmdb";
+import { searchMovies } from "@/lib/tmdb";
 import Image from 'next/image';
 
 export default function AddEntry() {
