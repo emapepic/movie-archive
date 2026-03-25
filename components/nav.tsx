@@ -23,7 +23,7 @@ export default function Nav() {
         <nav className='flex flex-row gap-4 cursor-pointer'>
           <ul className='flex flex-row list-none gap-4'>
             <li className="relative group">
-              Movies
+              <Link href="/movies">Movies</Link>
               <ul>
                 <li className="absolute left-0 hidden group-hover:block">
                   <Link href="/add-entry">Add movie</Link>
