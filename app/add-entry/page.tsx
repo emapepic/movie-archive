@@ -32,27 +32,31 @@ export default function AddEntry() {
     }, [searchTerm]);
 
     return (
-        <div>
-            <form>
-                <div>
-                    <label>Name</label>
-                    <input 
-                        type="text"
-                        placeholder="Search for a movie"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        required
-                     />
-                </div>
-                <div>
-                    {searchResult.map(movie => (
-                        <div key={movie.id}>
-                            <Image src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}  alt={movie.title} width={100} height={100} />
-                            <p>{movie.title}</p>
-                        </div>
-                    ))}
-                </div>
-            </form>
+        <div className="p-5">
+            <div className="flex gap-4">
+                <label>Name</label>
+                <input
+                    type="text"
+                    placeholder="Search for a movie"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    required
+                />
+            </div>
+            <div className="grid grid-cols-4">
+                {searchResult.map((movie) => (
+                    <div key={movie.id}>
+                    <Image
+                        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                        alt={movie.title}
+                        width={100}
+                        height={100}
+                    />
+                    <p>{movie.title}</p>
+                    <button>Add to archive</button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
