@@ -19,3 +19,12 @@ export async function searchMovies(query: string): Promise<TMDBResponseMovies> {
   const res = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&page=1`, options)
   return res.json();
 }
+
+export async function getMovieDetails(id: number) {
+  const res = await fetch(`https://api.themoviedb.org/3/movie/${id}`, options);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch movie with ID: ${id}`);
+  }
+
+  return res.json();
+}
