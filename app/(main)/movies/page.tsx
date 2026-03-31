@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getMovieDetails } from "@/lib/tmdb";
 import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
