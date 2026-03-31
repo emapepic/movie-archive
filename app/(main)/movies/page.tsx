@@ -35,21 +35,32 @@ export default async function MoviesPage() {
     const movies = tmdbMovies.filter(m => m!== null);
 
     return (
-        <div className="grid grid-cols-4 p-5">
-            {movies.map(movie => (
-                <div key={movie.id}>
-                    <Image
-                        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                        alt={movie.title}
-                        width={100}
-                        height={100}
-                    />
-                    <p>{movie.title}</p>
-                </div>
-            ))}
-            {movies.length === 0 && (
-                <p>You don&apos;t have any saved movies.</p>
-            )}
-        </div>
+        <>
+            <div className="flex flex-row justify-between p-6">
+                <h1>Movies</h1>
+                <button className="p-2 border rounded-lg">Add movie</button>
+            </div>
+            <div className="grid grid-cols-2 p-6 gap-5">
+                {movies.map(movie => (
+                    <div key={movie.id} className="flex flex-row gap-5">
+                        <Image
+                            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                            alt={movie.title}
+                            width={180}
+                            height={100}
+                        />
+                        <div className="self-center">
+                            <h3>{movie.title}</h3>
+                            <p>{new Date(movie.release_date).toLocaleDateString('en-GB')}</p>
+                            <p>{movie.vote_average}</p>
+                            <p>{movie.overview}</p>
+                        </div>
+                    </div>
+                ))}
+                {movies.length === 0 && (
+                    <p>You don&apos;t have any saved movies.</p>
+                )}
+            </div>
+        </>
     );
 }
