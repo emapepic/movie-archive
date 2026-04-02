@@ -1,3 +1,4 @@
+import MoviesPageClient from "@/components/MoviesPageClient";
 import { getMovieDetails } from "@/lib/tmdb";
 import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
@@ -38,7 +39,7 @@ export default async function MoviesPage() {
         <>
             <div className="flex flex-row justify-between p-6">
                 <h1>Movies</h1>
-                <button className="p-2 border rounded-lg">Add movie</button>
+                <MoviesPageClient />
             </div>
             <div className="grid grid-cols-2 p-6 gap-5">
                 {movies.map(movie => (
