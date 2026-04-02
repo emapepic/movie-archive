@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import MoviesPageClient from "@/components/MoviesPageClient";
 import { getMovieDetails } from "@/lib/tmdb";
 import { createClient } from "@/utils/supabase/server";
