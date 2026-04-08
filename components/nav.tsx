@@ -26,7 +26,9 @@ export default function Nav() {
               <Link href="/movies">Movies</Link>
             </li>
             <li>Series</li>
-            <li>Watchlist</li>
+            <li>
+              <Link href="/watchlist">Watchlist</Link>
+            </li>
           </ul>
           <button onClick={handleLogout}>Logout</button>
         </nav>
