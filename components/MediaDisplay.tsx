@@ -2,7 +2,7 @@ import { getMovieDetails } from "@/lib/tmdb";
 import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
 
-async function getArchivedMovies(status?: string) {
+async function getArchivedMovies(status?: string, limit?: number, orderBy?: string) {
     const supabase = await createClient();
     const {data: {user}} = await supabase.auth.getUser();
 
@@ -12,6 +12,14 @@ async function getArchivedMovies(status?: string) {
     
     if (status) {
         query = query.eq('status', status);
+    }
+
+    if (orderBy) {
+        query = query.order(orderBy, { ascending: false });
+    }
+
+    if (limit) {
+        query = query.limit(limit);
     }
 
     const {data, error} = await query;
@@ -24,8 +32,8 @@ async function getArchivedMovies(status?: string) {
     return data;
 }
 
-export default async function MediaDisplay({ status }: { status?: string }) {
-    const dbMovies = await getArchivedMovies(status);
+export default async function MediaDisplay({ status, limit, orderBy }: { status?: string, limit?: number, orderBy?: string }) {
+    const dbMovies = await getArchivedMovies(status, limit, orderBy);
 
     const tmdbMovies = await Promise.all(
         dbMovies.map(async item => {
