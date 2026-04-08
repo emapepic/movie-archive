@@ -27,7 +27,12 @@ export default async function MoviesPage() {
     const tmdbMovies = await Promise.all( // korisitmo promise all da ne saljemo zahtjev po zahtjev vec za sve paralelno
         dbMovies.map(async item => {
             try {
-                return await getMovieDetails(item.tmdb_id);
+                const details = await getMovieDetails(item.tmdb_id);
+                return {
+                    ...details,
+                    status: item.status,
+                    user_opinion: item.user_opinion
+                }
             } catch (error) {
                 console.error(`Greška za film ${item.tmdb_id}:`, error);
                 return null;
@@ -55,8 +60,8 @@ export default async function MoviesPage() {
                         <div className="self-center">
                             <h3>{movie.title}</h3>
                             <p>{new Date(movie.release_date).toLocaleDateString('en-GB')}</p>
-                            <p>{movie.vote_average}</p>
-                            <p>{movie.overview}</p>
+                            <p>{movie.status}</p>
+                            <p>{movie.user_opinion}</p>
                         </div>
                     </div>
                 ))}

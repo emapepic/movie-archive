@@ -38,6 +38,8 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+    const [status, setStatus] = useState("watched");
+    const [userOpinion, setUserOpinion] = useState("");
 
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -91,17 +93,19 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
             setSearchResult([]);
             setIsDropdownOpen(false);
             setSelectedMovie(null);
+            setStatus("watched");
+            setUserOpinion("");
         }
     }, [isOpen]);
 
-    const handleAddEntry = async (movie: Movie | null) => {
+    const handleAddEntry = async (movie: Movie | null, status: string, userOpinion: string) => {
         if (!movie) return;
 
         const {data: {user}} = await supabase.auth.getUser();
 
         if (!user) return alert("You have to be logged in!");
 
-        const result = await addMovieToDatabase(user.id, movie.id);
+        const result = await addMovieToDatabase(user.id, movie.id, status, userOpinion);
 
         if (result.error) {
             alert(result.error);
@@ -115,7 +119,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-            <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-xl text-black" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-col bg-white rounded-xl p-6 w-full max-w-md shadow-xl text-black" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Add a movie</h2>
                     <button onClick={onClose} className="hover:text-black">✕</button>
@@ -150,13 +154,42 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                             ))}
                         </ul>
                     )}
-
-                    {selectedMovie && (
-                        <MovieOption movie={selectedMovie} />
-                    )}
-
-                    <button onClick={() => handleAddEntry(selectedMovie)} disabled={!selectedMovie}>Add movie</button>
                 </div>
+                {selectedMovie && (
+                    <MovieOption movie={selectedMovie} />
+                )}
+
+                <div>
+                    <input 
+                        type="radio" 
+                        name="status" 
+                        value="watched"
+                        checked={status === "watched"}
+                        onChange={(e) => setStatus(e.target.value)}
+                    />
+                    <label>Watched</label>
+                </div>
+                <div>
+                    <input 
+                        type="radio" 
+                        name="status" 
+                        value="watchlist"
+                        checked={status === "watchlist"}
+                        onChange={(e) => setStatus(e.target.value)}
+                    />
+                    <label>Watchlist</label>
+                </div>
+
+                <textarea 
+                    value={userOpinion}
+                    onChange={(e) => setUserOpinion(e.target.value)}
+                    rows={5} 
+                    cols={30} 
+                    placeholder="Your thoughts.." 
+                    className="border"
+                />
+
+                <button onClick={() => handleAddEntry(selectedMovie, status, userOpinion)} disabled={!selectedMovie}>Add movie</button>
             </div>
         </div>
     );

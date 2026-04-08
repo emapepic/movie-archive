@@ -1,6 +1,6 @@
 'use server';
 
-import { TMDBResponseMovies } from "@/types/tmdb";
+import { Movie, TMDBResponseMovies } from "@/types/tmdb";
 
 const options = {
   method: "GET",
@@ -20,7 +20,7 @@ export async function searchMovies(query: string): Promise<TMDBResponseMovies> {
   return res.json();
 }
 
-export async function getMovieDetails(id: number) {
+export async function getMovieDetails(id: number): Promise<Movie> {
   const res = await fetch(`https://api.themoviedb.org/3/movie/${id}`, options);
   if (!res.ok) {
     throw new Error(`Failed to fetch movie with ID: ${id}`);
