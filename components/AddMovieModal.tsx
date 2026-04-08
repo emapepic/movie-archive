@@ -105,7 +105,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
 
         if (!user) return alert("You have to be logged in!");
 
-        const result = await addMovieToDatabase(user.id, movie.id, status, userOpinion);
+        const result = await addMovieToDatabase(user.id, movie.id, "movie", status, userOpinion);
 
         if (result.error) {
             alert(result.error);
