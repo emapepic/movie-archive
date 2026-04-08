@@ -11,7 +11,7 @@ async function getArchivedMovies() {
 
     if (!user) return [];
 
-    const {data, error} = await supabase.from('user_movies').select('*').eq('user_id', user.id);
+    const {data, error} = await supabase.from('user_archive').select('*').eq('user_id', user.id);
 
     if (error) {
         console.error(error);
