@@ -119,7 +119,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-            <div className="flex flex-col bg-white rounded-xl p-6 w-full max-w-md shadow-xl text-black" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-col gap-2 w-[90vw] max-w-md p-6 bg-white rounded-xl shadow-xl text-black md:w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Add a movie</h2>
                     <button onClick={onClose} className="hover:text-black">✕</button>
@@ -131,7 +131,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                         placeholder="Search for a movie..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-amber-950"
                         autoFocus
                     />
 
@@ -159,7 +159,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                     <MovieOption movie={selectedMovie} />
                 )}
 
-                <div>
+                <div className="flex flex-row gap-2">
                     <input 
                         type="radio" 
                         name="status" 
@@ -169,7 +169,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                     />
                     <label>Watched</label>
                 </div>
-                <div>
+                <div className="flex flex-row gap-2">
                     <input 
                         type="radio" 
                         name="status" 
@@ -183,13 +183,18 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                 <textarea 
                     value={userOpinion}
                     onChange={(e) => setUserOpinion(e.target.value)}
-                    rows={5} 
-                    cols={30} 
+                    rows={3} 
                     placeholder="Your thoughts.." 
-                    className="border"
+                    className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-amber-950"
                 />
 
-                <button onClick={() => handleAddEntry(selectedMovie, status, userOpinion)} disabled={!selectedMovie}>Add movie</button>
+                <button 
+                    onClick={() => handleAddEntry(selectedMovie, status, userOpinion)} 
+                    disabled={!selectedMovie}
+                    className="w-fit px-3 py-2 border rounded-xl shadow-2xl"
+                >
+                    Add movie
+                </button>
             </div>
         </div>
     );

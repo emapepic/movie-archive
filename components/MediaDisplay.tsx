@@ -32,6 +32,12 @@ async function getArchivedMovies(status?: string, limit?: number, orderBy?: stri
     return data;
 }
 
+function setStatusColor(status: string) {
+    return status === "watched" 
+        ? "text-[#16A249] bg-[#16a24933]" 
+        : "text-[#3c83f6] bg-[#3c83f631]";
+}
+
 export default async function MediaDisplay({ status, limit, orderBy }: { status?: string, limit?: number, orderBy?: string }) {
     const dbMovies = await getArchivedMovies(status, limit, orderBy);
 
@@ -54,7 +60,7 @@ export default async function MediaDisplay({ status, limit, orderBy }: { status?
     const movies = tmdbMovies.filter(m => m !== null);
 
     return (
-        <div className="grid grid-cols-2 p-6 gap-5">
+        <div className="flex flex-col md:grid md:grid-cols-2 p-6 gap-5">
             {movies.map(movie => (
                 <div key={movie.id} className="flex flex-row gap-5">
                     <Image
@@ -62,11 +68,12 @@ export default async function MediaDisplay({ status, limit, orderBy }: { status?
                         alt={movie.title}
                         width={180}
                         height={100}
+                        className="w-30"
                     />
-                    <div className="self-center">
+                    <div className="flex flex-col self-center gap-3">
                         <h3>{movie.title}</h3>
                         <p>{new Date(movie.release_date).toLocaleDateString('en-GB')}</p>
-                        <p>{movie.status}</p>
+                        <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(movie.status)}`}>{movie.status}</p>
                         <p>{movie.user_opinion}</p>
                     </div>
                 </div>

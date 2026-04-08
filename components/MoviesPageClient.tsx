@@ -7,7 +7,12 @@ export default function MoviesPageClient() {
 
     return (
         <>
-            <button onClick={() => setIsModalOpen(true)}>Add movie</button>
+            <button 
+                onClick={() => setIsModalOpen(true)}
+                className="px-3 py-2 border border-white rounded-xl"
+            >
+                Add movie
+            </button>
             <AddMovieModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </>
     );
