@@ -1,4 +1,4 @@
-import MoviesPageClient from "@/components/MoviesPageClient";
+import MediaPageClient from "@/components/MediaPageClient";
 import MediaDisplay from "@/components/MediaDisplay";
 
 export default function Movies() {
@@ -6,9 +6,9 @@ export default function Movies() {
         <>
             <div className="flex flex-row justify-between p-6">
                 <h1>Movies</h1>
-                <MoviesPageClient />
+                <MediaPageClient label="Add Movie" type="movie" />
             </div>
-            <MediaDisplay />
+            <MediaDisplay type="movie" />
         </>
     );
 }
