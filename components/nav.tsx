@@ -25,7 +25,9 @@ export default function Nav() {
             <li>
               <Link href="/movies">Movies</Link>
             </li>
-            <li>Series</li>
+            <li>
+              <Link href="/series">Series</Link>
+            </li>
             <li>
               <Link href="/watchlist">Watchlist</Link>
             </li>
