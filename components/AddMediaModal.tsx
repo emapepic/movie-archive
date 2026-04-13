@@ -1,18 +1,20 @@
 'use client';
 import { useEffect, useState, useRef } from "react";
-import { Movie } from "@/types/tmdb";
-import { searchMovies } from "@/lib/tmdb";
-import { addMovieToDatabase } from "@/lib/actions";
+import { Movie, TV } from "@/types/tmdb";
+import { searchMovies, searchTV } from "@/lib/tmdb";
+import { addMediaToDatabase } from "@/lib/actions";
 import { createClient } from "@/utils/supabase/client";
 import Image from 'next/image';
 
-function MovieOption({movie}: {movie: Movie}) {
+function MediaOption({item}: {item: Movie | TV}) {
+    const itemName = ("title" in item) ? item.title : item.name;
+    const itemDate = ("release_date" in item) ? item.release_date : item.first_air_date;
     return (
       <div className="flex items-center gap-3">
-        {movie.poster_path ? (
+        {item.poster_path ? (
           <Image
-            src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
-            alt={movie.title}
+            src={`https://image.tmdb.org/t/p/w92${item.poster_path}`}
+            alt={itemName}
             width={32}
             height={48}
             className="rounded object-cover"
@@ -21,10 +23,10 @@ function MovieOption({movie}: {movie: Movie}) {
           <div className="w-8 h-12 bg-gray-200 rounded" />
         )}
         <div>
-          <p className="text-sm font-medium">{movie.title}</p>
+          <p className="text-sm font-medium">{itemName}</p>
           <p className="text-xs">
-            {movie.release_date
-              ? new Date(movie.release_date).getFullYear()
+            {itemDate
+              ? new Date(itemDate).getFullYear()
               : "N/A"}
           </p>
         </div>
@@ -32,12 +34,12 @@ function MovieOption({movie}: {movie: Movie}) {
     );
 }
 
-export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClose: () => void}) {
+export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean, onClose: () => void, type: 'movie' | 'tv'}) {
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchResult, setSearchResult] = useState<Movie[]>([]);
+    const [searchResult, setSearchResult] = useState<(Movie | TV)[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+    const [selectedMedia, setSelectedMedia] = useState<Movie | TV | null>(null);
     const [status, setStatus] = useState("watched");
     const [userOpinion, setUserOpinion] = useState("");
 
@@ -46,7 +48,7 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
     const supabase = createClient();
 
     useEffect(() => {
-        const fetchMovies = async() => {
+        const fetchMedia = async() => {
             if(searchTerm.length < 3) {
                 setSearchResult([]);
                 setIsDropdownOpen(false);
@@ -55,7 +57,13 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
 
             setIsLoading(true);
             try {
-                const data = await searchMovies(searchTerm);
+                let data;
+                if (type === 'movie') {
+                    data = await searchMovies(searchTerm);
+                }
+                else {
+                    data = await searchTV(searchTerm);
+                }               
                 setSearchResult(data.results || []);
                 setIsDropdownOpen(true);
             }
@@ -69,11 +77,11 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
         }
 
         const timeoutId = setTimeout(()=> {
-            fetchMovies();
+            fetchMedia();
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [searchTerm]);
+    }, [searchTerm, type]);
 
     // zatvaranje dropdowna kad se klikne van njega
     useEffect(() => {
@@ -92,25 +100,25 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
             setSearchTerm("");
             setSearchResult([]);
             setIsDropdownOpen(false);
-            setSelectedMovie(null);
+            setSelectedMedia(null);
             setStatus("watched");
             setUserOpinion("");
         }
     }, [isOpen]);
 
-    const handleAddEntry = async (movie: Movie | null, status: string, userOpinion: string) => {
-        if (!movie) return;
+    const handleAddEntry = async (media: Movie | TV | null, status: string, userOpinion: string) => {
+        if (!media) return;
 
         const {data: {user}} = await supabase.auth.getUser();
 
         if (!user) return alert("You have to be logged in!");
 
-        const result = await addMovieToDatabase(user.id, movie.id, "movie", status, userOpinion);
+        const result = await addMediaToDatabase(user.id, media.id, type, status, userOpinion);
 
         if (result.error) {
             alert(result.error);
         } else {
-            alert("Movie added!");
+            alert("Added!");
             onClose();
         }
     }
@@ -121,14 +129,14 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
             <div className="flex flex-col gap-2 w-[90vw] max-w-md p-6 bg-white rounded-xl shadow-xl text-black md:w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">Add a movie</h2>
+                    <h2 className="text-lg font-semibold">Add {type === 'movie' ? 'Movie' : 'Series'}</h2>
                     <button onClick={onClose} className="hover:text-black">✕</button>
                 </div>
 
                 <div className="relative" ref={dropdownRef}>
                     <input
                         type="text"
-                        placeholder="Search for a movie..."
+                        placeholder={`Search for a ${type === 'movie' ? 'movie' : 'series'}...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-amber-950"
@@ -143,41 +151,43 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                             {!isLoading && searchResult.length === 0 && (
                                 <li className="px-3 py-2 text-sm">No results found.</li>
                             )}
-                            {!isLoading && searchResult.map((movie) => (
+                            {!isLoading && searchResult.map((item) => (
                                 <li
-                                    key={movie.id}
-                                    onClick={() => {setSelectedMovie(movie); setIsDropdownOpen(false);}}
+                                    key={item.id}
+                                    onClick={() => {setSelectedMedia(item); setIsDropdownOpen(false);}}
                                     className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer"
                                 >
-                                    <MovieOption movie={movie} />
+                                    <MediaOption item={item} />
                                 </li>
                             ))}
                         </ul>
                     )}
                 </div>
-                {selectedMovie && (
-                    <MovieOption movie={selectedMovie} />
+                {selectedMedia && (
+                    <MediaOption item={selectedMedia} />
                 )}
 
                 <div className="flex flex-row gap-2">
-                    <input 
+                    <input
+                        id="status-watched" 
                         type="radio" 
                         name="status" 
                         value="watched"
                         checked={status === "watched"}
                         onChange={(e) => setStatus(e.target.value)}
                     />
-                    <label>Watched</label>
+                    <label htmlFor="status-watched">Watched</label>
                 </div>
                 <div className="flex flex-row gap-2">
                     <input 
+                        id="status-watchlist"
                         type="radio" 
                         name="status" 
                         value="watchlist"
                         checked={status === "watchlist"}
                         onChange={(e) => setStatus(e.target.value)}
                     />
-                    <label>Watchlist</label>
+                    <label htmlFor="status-watchlist">Watchlist</label>
                 </div>
 
                 <textarea 
@@ -189,11 +199,11 @@ export default function AddMovieModal({isOpen, onClose}: {isOpen: boolean, onClo
                 />
 
                 <button 
-                    onClick={() => handleAddEntry(selectedMovie, status, userOpinion)} 
-                    disabled={!selectedMovie}
+                    onClick={() => handleAddEntry(selectedMedia, status, userOpinion)} 
+                    disabled={!selectedMedia}
                     className="w-fit px-3 py-2 border rounded-xl shadow-2xl"
                 >
-                    Add movie
+                    Add {type === 'movie' ? 'Movie' : 'Series'}
                 </button>
             </div>
         </div>

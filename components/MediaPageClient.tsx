@@ -1,8 +1,8 @@
 'use client';
 import { useState } from "react";
-import AddMovieModal from "./AddMovieModal";
+import AddMediaModal from "./AddMediaModal";
 
-export default function MoviesPageClient() {
+export default function MediaPageClient({label, type}: {label: string, type: 'movie' | 'tv'}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -11,9 +11,9 @@ export default function MoviesPageClient() {
                 onClick={() => setIsModalOpen(true)}
                 className="px-3 py-2 border border-white rounded-xl"
             >
-                Add movie
+                {label}
             </button>
-            <AddMovieModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <AddMediaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} type={type} />
         </>
     );
 }

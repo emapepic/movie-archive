@@ -1,8 +1,8 @@
-import { getMovieDetails } from "@/lib/tmdb";
+import { getMovieDetails, getTVDetails } from "@/lib/tmdb";
 import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
 
-async function getArchivedMovies(status?: string, limit?: number, orderBy?: string) {
+async function getArchivedMedia(type?: 'movie' | 'tv', status?: string, limit?: number, orderBy?: string) {
     const supabase = await createClient();
     const {data: {user}} = await supabase.auth.getUser();
 
@@ -10,6 +10,10 @@ async function getArchivedMovies(status?: string, limit?: number, orderBy?: stri
 
     let query = supabase.from('user_archive').select('*').eq('user_id', user.id);
     
+    if (type) {
+        query = query.eq('media_type', type);
+    }
+
     if (status) {
         query = query.eq('status', status);
     }
@@ -38,17 +42,29 @@ function setStatusColor(status: string) {
         : "text-[#3c83f6] bg-[#3c83f631]";
 }
 
-export default async function MediaDisplay({ status, limit, orderBy }: { status?: string, limit?: number, orderBy?: string }) {
-    const dbMovies = await getArchivedMovies(status, limit, orderBy);
+export default async function MediaDisplay({ type, status, limit, orderBy }: { type?: 'movie' | 'tv', status?: string, limit?: number, orderBy?: string }) {
+    const dbMovies = await getArchivedMedia(type, status, limit, orderBy);
 
     const tmdbMovies = await Promise.all(
         dbMovies.map(async item => {
             try {
-                const details = await getMovieDetails(item.tmdb_id);
+                let details;
+                if (type === 'movie') {
+                    details = await getMovieDetails(item.tmdb_id);
+                }
+                else {
+                    details = await getTVDetails(item.tmdb_id);
+                }
+
+                const mediaTitle = 'title' in details ? details.title : details.name;
+                const mediaDate = 'release_date' in details ? details.release_date : details.first_air_date;
                 return {
-                    ...details,
                     status: item.status,
-                    user_opinion: item.user_opinion
+                    user_opinion: item.user_opinion,
+                    mediaTitle,
+                    mediaDate,
+                    id: details.id,
+                    poster_path: details.poster_path
                 }
             } catch (error) {
                 console.error(`Greška za film ${item.tmdb_id}:`, error);
@@ -57,29 +73,29 @@ export default async function MediaDisplay({ status, limit, orderBy }: { status?
         })
     )
 
-    const movies = tmdbMovies.filter(m => m !== null);
+    const media = tmdbMovies.filter(m => m !== null);
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 p-6 gap-5">
-            {movies.map(movie => (
-                <div key={movie.id} className="flex flex-row gap-5">
+            {media.map(item => (
+                <div key={item.id} className="flex flex-row gap-5">
                     <Image
-                        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                        alt={movie.title}
+                        src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                        alt={item.mediaTitle}
                         width={180}
                         height={100}
                         className="w-30"
                     />
                     <div className="flex flex-col self-center gap-3">
-                        <h3>{movie.title}</h3>
-                        <p>{new Date(movie.release_date).toLocaleDateString('en-GB')}</p>
-                        <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(movie.status)}`}>{movie.status}</p>
-                        <p>{movie.user_opinion}</p>
+                        <h3>{item.mediaTitle}</h3>
+                        <p>{new Date(item.mediaDate).toLocaleDateString('en-GB')}</p>
+                        <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
+                        <p>{item.user_opinion}</p>
                     </div>
                 </div>
             ))}
-            {movies.length === 0 && (
-                <p>You don&apos;t have any saved movies.</p>
+            {media.length === 0 && (
+                <p>You don&apos;t have any saved {type === 'movie' ? 'movies' : 'series'}.</p>
             )}
         </div>
     );
