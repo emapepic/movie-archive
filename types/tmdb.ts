@@ -1,3 +1,4 @@
+// movies
 export type Movie = {
   id: number;
   title: string;
@@ -13,3 +14,20 @@ export type TMDBResponseMovies = {
   total_pages: number;
   total_results: number;
 };
+
+// series
+export type TV = {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string;
+  first_air_date: string;
+  vote_average: number;
+}
+
+export type TMDBResponseTV = {
+  results: TV[];
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
