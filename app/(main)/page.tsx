@@ -6,7 +6,7 @@ export default function Homepage() {
             <div className="flex flex-row justify-between p-6">
                 <h1>Recently added</h1>
             </div>
-            <MediaDisplay orderBy="created_at" limit={5} />
+            <MediaDisplay orderBy="created_at" limit={5} showMediaType={true} showStatus={true} />
         </>
     );
 }

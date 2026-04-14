@@ -6,7 +6,7 @@ export default function Watchlist() {
             <div className="flex flex-row justify-between p-6">
                 <h1>Watchlist</h1>
             </div>
-            <MediaDisplay status="watchlist" />
+            <MediaDisplay status="watchlist" showMediaType={true} />
         </>
     );
 }

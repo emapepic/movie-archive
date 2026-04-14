@@ -8,7 +8,7 @@ export default function Movies() {
                 <h1>Movies</h1>
                 <MediaPageClient label="Add Movie" type="movie" />
             </div>
-            <MediaDisplay type="movie" />
+            <MediaDisplay type="movie" showStatus={true} />
         </>
     );
 }

@@ -42,14 +42,24 @@ function setStatusColor(status: string) {
         : "text-[#3c83f6] bg-[#3c83f631]";
 }
 
-export default async function MediaDisplay({ type, status, limit, orderBy }: { type?: 'movie' | 'tv', status?: string, limit?: number, orderBy?: string }) {
+function setMediTypeColor(mediaTypeDisplay: string) {
+    return mediaTypeDisplay === "Movie"
+        ? "text-[#fffc65] bg-[#c9c73f51]"
+        : "text-[#77f6ff] bg-[#3fc0c951]"
+}
+
+export default async function MediaDisplay({ type, status, limit, orderBy, showStatus = false, showMediaType = false }: 
+    { type?: 'movie' | 'tv', status?: string, limit?: number, orderBy?: string, showStatus?: boolean, showMediaType?: boolean }) {
     const dbMovies = await getArchivedMedia(type, status, limit, orderBy);
 
     const tmdbMovies = await Promise.all(
         dbMovies.map(async item => {
             try {
+                const mediaType = type ?? item.media_type;
+                const mediaTypeDisplay = mediaType === "movie" ? "Movie" : "Series";
+
                 let details;
-                if (type === 'movie') {
+                if (mediaType === 'movie') {
                     details = await getMovieDetails(item.tmdb_id);
                 }
                 else {
@@ -58,13 +68,15 @@ export default async function MediaDisplay({ type, status, limit, orderBy }: { t
 
                 const mediaTitle = 'title' in details ? details.title : details.name;
                 const mediaDate = 'release_date' in details ? details.release_date : details.first_air_date;
+               
                 return {
                     status: item.status,
                     user_opinion: item.user_opinion,
                     mediaTitle,
                     mediaDate,
                     id: details.id,
-                    poster_path: details.poster_path
+                    poster_path: details.poster_path,
+                    mediaTypeDisplay
                 }
             } catch (error) {
                 console.error(`Greška za film ${item.tmdb_id}:`, error);
@@ -89,7 +101,12 @@ export default async function MediaDisplay({ type, status, limit, orderBy }: { t
                     <div className="flex flex-col self-center gap-3">
                         <h3>{item.mediaTitle}</h3>
                         <p>{new Date(item.mediaDate).toLocaleDateString('en-GB')}</p>
-                        <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
+                        {showMediaType && (
+                            <p className={`w-fit px-3 font-bold rounded-2xl ${setMediTypeColor(item.mediaTypeDisplay)}`}>{item.mediaTypeDisplay}</p>
+                        )}
+                        {showStatus && (
+                            <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
+                        )}
                         <p>{item.user_opinion}</p>
                     </div>
                 </div>

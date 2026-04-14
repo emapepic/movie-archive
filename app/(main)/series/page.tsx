@@ -8,7 +8,7 @@ export default function Series() {
                 <h1>Series</h1>
                 <MediaPageClient label="Add Series" type="tv" />
             </div>
-            <MediaDisplay type="tv" />
+            <MediaDisplay type="tv" showStatus={true} />
         </>
     );
 }
