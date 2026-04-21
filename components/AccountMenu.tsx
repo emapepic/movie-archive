@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import accountIcon from "@/public/images/account-icon.svg";
+import Link from "next/link";
 
 export default function AccountMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ export default function AccountMenu() {
             <Image src={accountIcon} alt="account" width={30} height={30} className="cursor:pointer" onClick={() => setIsOpen(prev => !prev)} />
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-40 flex flex-col items-start gap-5 p-5 bg-background border border-foreground rounded-lg">
-                    <p onClick={() => setIsOpen(false)}>✎ Edit profile</p>
+                    <Link href='/profile' onClick={() => setIsOpen(false)}>✎ Edit profile</Link>
                     <button onClick={handleLogout}>➜] Logout</button>
                 </div>
             )}
