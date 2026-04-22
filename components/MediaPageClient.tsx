@@ -2,7 +2,10 @@
 import { useState } from "react";
 import AddMediaModal from "./AddMediaModal";
 
-export default function MediaPageClient({label, type}: {label: string, type: 'movie' | 'tv'}) {
+export default function MediaPageClient({
+    label, type, hideStatus = false, allowBothTypes = false
+    }: {label: string, type: 'movie' | 'tv', hideStatus?: boolean, allowBothTypes?: boolean}) {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -13,7 +16,7 @@ export default function MediaPageClient({label, type}: {label: string, type: 'mo
             >
                 {label}
             </button>
-            <AddMediaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} type={type} />
+            <AddMediaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} type={type} hideStatus={hideStatus} allowBothTypes={allowBothTypes} />
         </>
     );
 }

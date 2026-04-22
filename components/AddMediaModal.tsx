@@ -34,7 +34,11 @@ function MediaOption({item}: {item: Movie | TV}) {
     );
 }
 
-export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean, onClose: () => void, type: 'movie' | 'tv'}) {
+export default function AddMediaModal({
+        isOpen, onClose, type, hideStatus = false, allowBothTypes = false
+    }: {isOpen: boolean, onClose: () => void, type: 'movie' | 'tv', hideStatus?: boolean, allowBothTypes?: boolean}) {
+
+    const [activeType, setActiveType] = useState<'movie' | 'tv'>(type);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState<(Movie | TV)[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -58,7 +62,7 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
             setIsLoading(true);
             try {
                 let data;
-                if (type === 'movie') {
+                if (activeType === 'movie') {
                     data = await searchMovies(searchTerm);
                 }
                 else {
@@ -81,7 +85,7 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
         }, 500);
 
         return () => clearTimeout(timeoutId);
-    }, [searchTerm, type]);
+    }, [searchTerm, activeType]);
 
     // zatvaranje dropdowna kad se klikne van njega
     useEffect(() => {
@@ -97,6 +101,7 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
 
     useEffect(() => {
         if (!isOpen) {
+            setActiveType(type);
             setSearchTerm("");
             setSearchResult([]);
             setIsDropdownOpen(false);
@@ -104,7 +109,7 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
             setStatus("watched");
             setUserOpinion("");
         }
-    }, [isOpen]);
+    }, [isOpen, type]);
 
     const handleAddEntry = async (media: Movie | TV | null, status: string, userOpinion: string) => {
         if (!media) return;
@@ -129,14 +134,31 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
             <div className="flex flex-col gap-2 w-[90vw] max-w-md p-6 bg-white rounded-xl shadow-xl text-black md:w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">Add {type === 'movie' ? 'Movie' : 'Series'}</h2>
+                    <h2 className="text-lg font-semibold">Add {allowBothTypes ? 'Media' : type === 'movie' ? 'Movie' : 'Series'}</h2>
                     <button onClick={onClose} className="hover:text-black">✕</button>
                 </div>
+
+                {allowBothTypes && (
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setActiveType('movie')}
+                            className={`px-3 py-1 rounded-lg border ${activeType === 'movie' ? 'bg-amber-950 text-white' : ''}`}
+                        >
+                            Movie
+                        </button>
+                        <button
+                            onClick={() => setActiveType('tv')}
+                            className={`px-3 py-1 rounded-lg border ${activeType === 'tv' ? 'bg-amber-950 text-white' : ''}`}
+                        >
+                            Series
+                        </button>
+                    </div>
+                )}
 
                 <div className="relative" ref={dropdownRef}>
                     <input
                         type="text"
-                        placeholder={`Search for a ${type === 'movie' ? 'movie' : 'series'}...`}
+                        placeholder={`Search for a ${allowBothTypes ? 'media' : type === 'movie' ? 'movie' : 'series'}...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-amber-950"
@@ -163,33 +185,38 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
                         </ul>
                     )}
                 </div>
+
                 {selectedMedia && (
                     <MediaOption item={selectedMedia} />
                 )}
 
-                <div className="flex flex-row gap-2">
-                    <input
-                        id="status-watched" 
-                        type="radio" 
-                        name="status" 
-                        value="watched"
-                        checked={status === "watched"}
-                        onChange={(e) => setStatus(e.target.value)}
-                    />
-                    <label htmlFor="status-watched">Watched</label>
-                </div>
-                <div className="flex flex-row gap-2">
-                    <input 
-                        id="status-watchlist"
-                        type="radio" 
-                        name="status" 
-                        value="watchlist"
-                        checked={status === "watchlist"}
-                        onChange={(e) => setStatus(e.target.value)}
-                    />
-                    <label htmlFor="status-watchlist">Watchlist</label>
-                </div>
-
+                {!hideStatus && (
+                    <>
+                        <div className="flex flex-row gap-2">
+                            <input
+                                id="status-watched" 
+                                type="radio" 
+                                name="status" 
+                                value="watched"
+                                checked={status === "watched"}
+                                onChange={(e) => setStatus(e.target.value)}
+                            />
+                            <label htmlFor="status-watched">Watched</label>
+                        </div>
+                        <div className="flex flex-row gap-2">
+                            <input 
+                                id="status-watchlist"
+                                type="radio" 
+                                name="status" 
+                                value="watchlist"
+                                checked={status === "watchlist"}
+                                onChange={(e) => setStatus(e.target.value)}
+                            />
+                            <label htmlFor="status-watchlist">Watchlist</label>
+                        </div>
+                    </>
+                )}
+                
                 <textarea 
                     value={userOpinion}
                     onChange={(e) => setUserOpinion(e.target.value)}
@@ -203,7 +230,7 @@ export default function AddMediaModal({isOpen, onClose, type}: {isOpen: boolean,
                     disabled={!selectedMedia}
                     className="w-fit px-3 py-2 border rounded-xl shadow-2xl"
                 >
-                    Add {type === 'movie' ? 'Movie' : 'Series'}
+                    Add {allowBothTypes ? 'Media' : type === 'movie' ? 'Movie' : 'Series'}
                 </button>
             </div>
         </div>
