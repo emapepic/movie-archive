@@ -78,3 +78,22 @@ export async function getArchivedMedia(type?: 'movie' | 'tv', status?: string, l
 
     return data;
 }
+
+// get film/seriju preko id
+export async function getMediaById(id: number) {
+    const supabase = await createClient();
+    const {data: {user}} = await supabase.auth.getUser();
+
+    if (!user) return null;
+
+    const query = supabase.from('user_archive').select('*').eq('user_id', user.id).eq('tmdb_id', id).single();
+
+    const {data, error} = await query;
+
+    if (error) {
+        console.error(error);
+        return null;
+    }
+
+    return data;
+}
