@@ -1,6 +1,7 @@
 import { getMovieDetails, getTVDetails } from "@/lib/tmdb";
 import { getArchivedMedia } from "@/lib/actions";
 import Image from "next/image";
+import Link from "next/link";
 import StarDisplay from "./StarDisplay";
 
 function setStatusColor(status: string) {
@@ -58,27 +59,29 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 p-6 gap-5">
             {media.map(item => (
-                <div key={item.id} className="flex flex-row gap-5">
-                    <Image
-                        src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                        alt={item.mediaTitle}
-                        width={180}
-                        height={100}
-                        className="w-30"
-                    />
-                    <div className="flex flex-col self-center gap-3">
-                        <h3>{item.mediaTitle}</h3>
-                        <p>{new Date(item.mediaDate).toLocaleDateString('en-GB')}</p>
-                        {showMediaType && (
-                            <p className={`w-fit px-3 font-bold rounded-2xl ${setMediTypeColor(item.mediaTypeDisplay)}`}>{item.mediaTypeDisplay}</p>
-                        )}
-                        {showStatus && (
-                            <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
-                        )}
-                        <p>{item.user_opinion}</p>
-                        {item.user_rating > 0 && <StarDisplay rating={item.user_rating} />}
+                <Link key={item.id} href={`/${item.mediaTypeDisplay === 'Movie' ? 'movies' : 'series'}/${item.id}`} className="cursor-pointer hover:opacity-75">
+                    <div className="flex flex-row gap-5">
+                        <Image
+                            src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                            alt={item.mediaTitle}
+                            width={180}
+                            height={100}
+                            className="w-30"
+                        />
+                        <div className="flex flex-col self-center gap-3">
+                            <h3>{item.mediaTitle}</h3>
+                            <p>{new Date(item.mediaDate).toLocaleDateString('en-GB')}</p>
+                            {showMediaType && (
+                                <p className={`w-fit px-3 font-bold rounded-2xl ${setMediTypeColor(item.mediaTypeDisplay)}`}>{item.mediaTypeDisplay}</p>
+                            )}
+                            {showStatus && (
+                                <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
+                            )}
+                            <p>{item.user_opinion}</p>
+                            {item.user_rating > 0 && <StarDisplay rating={item.user_rating} />}
+                        </div>
                     </div>
-                </div>
+                </Link>
             ))}
             {media.length === 0 && (
                 <p>You don&apos;t have any saved {type === 'movie' ? 'movies' : 'series'}.</p>
