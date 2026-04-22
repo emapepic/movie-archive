@@ -1,41 +1,7 @@
 import { getMovieDetails, getTVDetails } from "@/lib/tmdb";
-import { createClient } from "@/utils/supabase/server";
+import { getArchivedMedia } from "@/lib/actions";
 import Image from "next/image";
 import StarDisplay from "./StarDisplay";
-
-async function getArchivedMedia(type?: 'movie' | 'tv', status?: string, limit?: number, orderBy?: string) {
-    const supabase = await createClient();
-    const {data: {user}} = await supabase.auth.getUser();
-
-    if (!user) return [];
-
-    let query = supabase.from('user_archive').select('*').eq('user_id', user.id);
-    
-    if (type) {
-        query = query.eq('media_type', type);
-    }
-
-    if (status) {
-        query = query.eq('status', status);
-    }
-
-    if (orderBy) {
-        query = query.order(orderBy, { ascending: false });
-    }
-
-    if (limit) {
-        query = query.limit(limit);
-    }
-
-    const {data, error} = await query;
-
-    if (error) {
-        console.error(error);
-        return [];
-    }
-
-    return data;
-}
 
 function setStatusColor(status: string) {
     return status === "watched" 
