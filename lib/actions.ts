@@ -33,11 +33,13 @@ export async function addMediaToDatabase(userId: string, tmdbId: number, type: s
 
     if (error) {
         if (error.code === '23505') {
-            return {error: "Movie already in archive"}
+            return {error: "Already in archive"}
         }
-        return {error: "Error saving movie"}
+        return {error: "Error saving entry"}
     }
 
     revalidatePath('/movies');
+    revalidatePath('/tv');
+    revalidatePath('/watchlist');
     return {success: true};
 }

@@ -45,7 +45,7 @@ export default function AddMediaModal({
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState<Movie | TV | null>(null);
-    const [status, setStatus] = useState("watched");
+    const [status, setStatus] = useState(hideStatus ? "watchlist" : "watched");
     const [userOpinion, setUserOpinion] = useState("");
     const [userRating, setUserRating] = useState(0);
 
@@ -108,11 +108,11 @@ export default function AddMediaModal({
             setSearchResult([]);
             setIsDropdownOpen(false);
             setSelectedMedia(null);
-            setStatus("watched");
+            setStatus(hideStatus ? "watchlist" : "watched");
             setUserOpinion("");
             setUserRating(0);
         }
-    }, [isOpen, type]);
+    }, [isOpen, type, hideStatus]);
 
     const handleAddEntry = async (media: Movie | TV | null, status: string, userOpinion?: string, userRating?: number) => {
         if (!media) return;
@@ -121,7 +121,7 @@ export default function AddMediaModal({
 
         if (!user) return alert("You have to be logged in!");
 
-        const result = await addMediaToDatabase(user.id, media.id, type, status, userOpinion, userRating);
+        const result = await addMediaToDatabase(user.id, media.id, activeType, status, userOpinion, userRating);
 
         if (result.error) {
             alert(result.error);
@@ -219,16 +219,20 @@ export default function AddMediaModal({
                         </div>
                     </>
                 )}
-                
-                <textarea 
-                    value={userOpinion}
-                    onChange={(e) => setUserOpinion(e.target.value)}
-                    rows={3} 
-                    placeholder="Your thoughts.." 
-                    className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-amber-950"
-                />
 
-                <StarRating rating={userRating} onRate={setUserRating} />
+                {(status === 'watched') && (
+                    <>
+                        <textarea 
+                            value={userOpinion}
+                            onChange={(e) => setUserOpinion(e.target.value)}
+                            rows={3} 
+                            placeholder="Your thoughts.." 
+                            className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-amber-950"
+                        />
+
+                        <StarRating rating={userRating} onRate={setUserRating} />
+                    </>
+                )}                
 
                 <button 
                     onClick={() => handleAddEntry(selectedMedia, status, userOpinion, userRating)} 
