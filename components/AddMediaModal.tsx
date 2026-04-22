@@ -5,6 +5,7 @@ import { searchMovies, searchTV } from "@/lib/tmdb";
 import { addMediaToDatabase } from "@/lib/actions";
 import { createClient } from "@/utils/supabase/client";
 import Image from 'next/image';
+import StarRating from "./StarRating";
 
 function MediaOption({item}: {item: Movie | TV}) {
     const itemName = ("title" in item) ? item.title : item.name;
@@ -46,6 +47,7 @@ export default function AddMediaModal({
     const [selectedMedia, setSelectedMedia] = useState<Movie | TV | null>(null);
     const [status, setStatus] = useState("watched");
     const [userOpinion, setUserOpinion] = useState("");
+    const [userRating, setUserRating] = useState(0);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -108,17 +110,18 @@ export default function AddMediaModal({
             setSelectedMedia(null);
             setStatus("watched");
             setUserOpinion("");
+            setUserRating(0);
         }
     }, [isOpen, type]);
 
-    const handleAddEntry = async (media: Movie | TV | null, status: string, userOpinion: string) => {
+    const handleAddEntry = async (media: Movie | TV | null, status: string, userOpinion?: string, userRating?: number) => {
         if (!media) return;
 
         const {data: {user}} = await supabase.auth.getUser();
 
         if (!user) return alert("You have to be logged in!");
 
-        const result = await addMediaToDatabase(user.id, media.id, type, status, userOpinion);
+        const result = await addMediaToDatabase(user.id, media.id, type, status, userOpinion, userRating);
 
         if (result.error) {
             alert(result.error);
@@ -225,8 +228,10 @@ export default function AddMediaModal({
                     className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-amber-950"
                 />
 
+                <StarRating rating={userRating} onRate={setUserRating} />
+
                 <button 
-                    onClick={() => handleAddEntry(selectedMedia, status, userOpinion)} 
+                    onClick={() => handleAddEntry(selectedMedia, status, userOpinion, userRating)} 
                     disabled={!selectedMedia}
                     className="w-fit px-3 py-2 border rounded-xl shadow-2xl"
                 >

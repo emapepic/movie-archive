@@ -1,6 +1,7 @@
 import { getMovieDetails, getTVDetails } from "@/lib/tmdb";
 import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
+import StarDisplay from "./StarDisplay";
 
 async function getArchivedMedia(type?: 'movie' | 'tv', status?: string, limit?: number, orderBy?: string) {
     const supabase = await createClient();
@@ -72,6 +73,7 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
                 return {
                     status: item.status,
                     user_opinion: item.user_opinion,
+                    user_rating: item.user_rating,
                     mediaTitle,
                     mediaDate,
                     id: details.id,
@@ -108,6 +110,7 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
                             <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
                         )}
                         <p>{item.user_opinion}</p>
+                        {item.user_rating > 0 && <StarDisplay rating={item.user_rating} />}
                     </div>
                 </div>
             ))}

@@ -26,10 +26,10 @@ export async function updateUserCredentials(newPassword?: string) {
 }
 
 // dodavanje filma/serije u bazu
-export async function addMediaToDatabase(userId: string, tmdbId: number, type: string, status: string, userOpinion: string) { 
+export async function addMediaToDatabase(userId: string, tmdbId: number, type: string, status: string, userOpinion?: string, userRating?: number) { 
     const supabase = await createClient();
 
-    const {error} = await supabase.from('user_archive').insert([{user_id: userId, tmdb_id: tmdbId, media_type: type, status: status, user_opinion: userOpinion}]);
+    const {error} = await supabase.from('user_archive').insert([{user_id: userId, tmdb_id: tmdbId, media_type: type, status: status, user_opinion: userOpinion, user_rating: userRating}]);
 
     if (error) {
         if (error.code === '23505') {
