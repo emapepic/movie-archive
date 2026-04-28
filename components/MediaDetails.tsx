@@ -1,6 +1,10 @@
+'use client'
+
 import Image from 'next/image';
 import StarDisplay from './StarDisplay';
 import ChangeStatusButton from './ChangeStatusButton';
+import DeleteModal from './DeleteModal';
+import { useState } from 'react';
 
 function setStatusColor(status: string) {
     return status === "watched" 
@@ -11,7 +15,10 @@ function setStatusColor(status: string) {
 export default function MediaDetails(
     {id, title, posterPath, date, overview, voteAverage, userOpinion, userRating, status}
     : {id: number, title: string, posterPath: string, date: string, overview: string, voteAverage: number, userOpinion: string, userRating: number, status: 'watched' | 'watchlist'}) {
-    return (
+      
+      const [isModalOpen, setIsModalOpen] = useState(false);
+    
+      return (
       <div className="flex items-center justify-center">
         <h1>{title}</h1>
         <div className="flex flex-row gap-5">
@@ -34,6 +41,8 @@ export default function MediaDetails(
             {status === 'watchlist' && (
               <ChangeStatusButton id={id} />
             )}
+            <button className="px-3 py-2 border border-white rounded-xl" onClick={() => setIsModalOpen(true)}>Delete</button>
+            <DeleteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} id={id} />
           </div>
         </div>
       </div>

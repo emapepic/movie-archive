@@ -115,3 +115,21 @@ export async function updateMediaStatus(id: number) {
     revalidatePath('/', 'layout');
     return {success: true};
 }
+
+// brisanje filma/serije
+export async function deleteMedia(id: number) {
+    const supabase = await createClient();
+    const {data: {user}} = await supabase.auth.getUser();
+
+    if (!user) return null;
+
+    const {error} = await supabase.from('user_archive').delete().eq('user_id', user.id).eq('tmdb_id', id);
+
+    if (error) {
+        console.error(error);
+        return {success: false};
+    }
+
+    revalidatePath('/', 'layout');
+    return {success: true};
+}
