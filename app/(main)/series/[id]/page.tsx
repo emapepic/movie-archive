@@ -11,6 +11,7 @@ export default async function MovieDetails({params}: {params: Promise<{id: strin
     
     return(
         <MediaDetails
+            id={details.id}
             title={details.name}
             posterPath={details.poster_path}
             date={details.first_air_date}
@@ -18,6 +19,7 @@ export default async function MovieDetails({params}: {params: Promise<{id: strin
             voteAverage={details.vote_average}
             userOpinion={archivedMedia?.user_opinion}
             userRating={archivedMedia?.user_rating}
+            status={archivedMedia.status}
         />
     );
 }

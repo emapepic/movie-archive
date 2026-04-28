@@ -97,3 +97,20 @@ export async function getMediaById(id: number) {
 
     return data;
 }
+
+// promjena statusa iz watchlist u watched
+export async function updateMediaStatus(id: number) {
+    const supabase = await createClient();
+    const {data: {user}} = await supabase.auth.getUser();
+
+    if (!user) return null;
+
+    const {error} = await supabase.from('user_archive').update({status: 'watched'}).eq('user_id', user.id).eq('tmdb_id', id);
+
+    if (error) {
+        console.error(error);
+        return {success: false};
+    }
+
+    return {success: true};
+}

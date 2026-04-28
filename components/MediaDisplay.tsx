@@ -3,6 +3,7 @@ import { getArchivedMedia } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
 import StarDisplay from "./StarDisplay";
+import ChangeStatusButton from "./ChangeStatusButton";
 
 function setStatusColor(status: string) {
     return status === "watched" 
@@ -59,15 +60,16 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 p-6 gap-5">
             {media.map(item => (
-                <Link key={item.id} href={`/${item.mediaTypeDisplay === 'Movie' ? 'movies' : 'series'}/${item.id}`} className="cursor-pointer hover:opacity-75">
-                    <div className="flex flex-row gap-5">
-                        <Image
-                            src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                            alt={item.mediaTitle}
-                            width={180}
-                            height={100}
-                            className="w-30"
-                        />
+                    <div key={item.id} className="flex flex-row gap-5">
+                        <Link href={`/${item.mediaTypeDisplay === 'Movie' ? 'movies' : 'series'}/${item.id}`} className="cursor-pointer hover:opacity-75">
+                            <Image
+                                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                                alt={item.mediaTitle}
+                                width={180}
+                                height={100}
+                                className="w-30"
+                            />
+                        </Link>
                         <div className="flex flex-col self-center gap-3">
                             <h3>{item.mediaTitle}</h3>
                             <p>{new Date(item.mediaDate).toLocaleDateString('en-GB')}</p>
@@ -79,9 +81,11 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
                             )}
                             <p>{item.user_opinion}</p>
                             {item.user_rating > 0 && <StarDisplay rating={item.user_rating} />}
+                            {item.status === 'watchlist' && (
+                                <ChangeStatusButton id={item.id} />
+                            )}
                         </div>
                     </div>
-                </Link>
             ))}
             {media.length === 0 && (
                 <p>You don&apos;t have any saved {type === 'movie' ? 'movies' : 'series'}.</p>
