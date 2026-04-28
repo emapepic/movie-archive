@@ -1,10 +1,13 @@
 'use client'
 
+import { updateMediaDetails } from '@/lib/actions';
+import { useState } from 'react';
 import Image from 'next/image';
 import StarDisplay from './StarDisplay';
 import ChangeStatusButton from './ChangeStatusButton';
 import DeleteModal from './DeleteModal';
-import { useState } from 'react';
+import StarRating from './StarRating';
+import toast from 'react-hot-toast';
 
 function setStatusColor(status: string) {
     return status === "watched" 
@@ -17,6 +20,20 @@ export default function MediaDetails(
     : {id: number, title: string, posterPath: string, date: string, overview: string, voteAverage: number, userOpinion: string, userRating: number, status: 'watched' | 'watchlist'}) {
       
       const [isModalOpen, setIsModalOpen] = useState(false);
+      const [isEditing, setIsEditing] = useState(false);
+      const [opinion, setOpinion] = useState(userOpinion);
+      const [rating, setRating] = useState(userRating);
+
+      const handleEdit = async () => {
+        try {
+          await updateMediaDetails(id, rating, opinion);
+          toast.success('Successfully updatewd!');
+          setIsEditing(false);
+        } catch (error) {
+          toast.error('Something went wrong');
+          console.error(error);
+        }
+      }
     
       return (
       <div className="flex items-center justify-center">
@@ -34,10 +51,32 @@ export default function MediaDetails(
             <p>{overview}</p>
             <p>{`Rating: ${voteAverage}`}</p>
             <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(status)}`}>{status}</p>
-            <p>{userOpinion}</p>
-            {userRating > 0 && (
-              <StarDisplay rating={userRating} />
+
+            {isEditing ? (
+              <>
+                <textarea 
+                  value={opinion}
+                  onChange={(e) => setOpinion(e.target.value)}
+                  rows={3} 
+                  placeholder="Your thoughts.." 
+                  className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-amber-950"
+                />
+                <StarRating rating={rating} onRate={setRating} />
+                <div className="flex gap-3">
+                  <button onClick={() => setIsEditing(false)} className="px-3 py-2 border border-white rounded-xl">Cancel</button>
+                  <button onClick={handleEdit} className="px-3 py-2 border border-white rounded-xl">Save</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>{opinion}</p>
+                {rating > 0 && (
+                  <StarDisplay rating={rating} />
+                )}
+                <button onClick={() => setIsEditing(true)} className="px-3 py-2 border border-white rounded-xl">Edit</button>
+              </>
             )}
+
             {status === 'watchlist' && (
               <ChangeStatusButton id={id} />
             )}
