@@ -6,6 +6,7 @@ import { addMediaToDatabase } from "@/lib/actions";
 import { createClient } from "@/utils/supabase/client";
 import Image from 'next/image';
 import StarRating from "./StarRating";
+import toast from 'react-hot-toast';
 
 function MediaOption({item}: {item: Movie | TV}) {
     const itemName = ("title" in item) ? item.title : item.name;
@@ -124,9 +125,9 @@ export default function AddMediaModal({
         const result = await addMediaToDatabase(user.id, media.id, activeType, status, userOpinion, userRating);
 
         if (result.error) {
-            alert(result.error);
+            toast.error('Something went wrong!');
         } else {
-            alert("Added!");
+            toast.success('Successfully added!')
             onClose();
         }
     }
