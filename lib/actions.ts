@@ -112,5 +112,6 @@ export async function updateMediaStatus(id: number) {
         return {success: false};
     }
 
+    revalidatePath('/', 'layout');
     return {success: true};
 }
