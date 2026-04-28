@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
@@ -29,9 +30,9 @@ export default function RegisterPage() {
         }
 
         if (error) {
-            alert("Greška: " + error.message);
+            toast.error('Error' + error.message);
         } else {
-            alert("Registracija uspešna!");
+            toast.success('Registration successful!');
             router.push("/login");
         }
         

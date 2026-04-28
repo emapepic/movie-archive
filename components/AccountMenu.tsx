@@ -4,8 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import accountIcon from "@/public/images/account-icon.svg";
 import Link from "next/link";
+import toast from 'react-hot-toast';
+import accountIcon from "@/public/images/account-icon.svg";
 
 export default function AccountMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function AccountMenu() {
       const { error } = await supabase.auth.signOut();
 
       if (error) {
-        alert("Error: " + error.message);
+        toast.error('Error' + error.message);
       } else {
         router.refresh();
         router.push("/login");

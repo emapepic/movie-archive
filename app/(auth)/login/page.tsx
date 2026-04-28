@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ export default function LoginPage() {
         });
 
         if (error) {
-            alert("Greška pri prijavi: " + error.message);
+            toast.error('Error' + error.message)
         } else {
             router.push("/");
         }

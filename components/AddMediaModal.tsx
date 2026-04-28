@@ -120,7 +120,10 @@ export default function AddMediaModal({
 
         const {data: {user}} = await supabase.auth.getUser();
 
-        if (!user) return alert("You have to be logged in!");
+        if (!user) {
+            toast.error('You have to be logged in!');
+            return;
+        }  
 
         const result = await addMediaToDatabase(user.id, media.id, activeType, status, userOpinion, userRating);
 
