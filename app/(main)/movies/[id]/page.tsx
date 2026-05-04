@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getMovieDetails } from "@/lib/tmdb";
 import { getMediaById } from "@/lib/actions";
 import MediaDetails from "@/components/MediaDetails";
@@ -6,7 +7,13 @@ export default async function MovieDetails({params}: {params: Promise<{id: strin
     const {id} = await params;
     const movieId = Number(id);
 
-    const details = await getMovieDetails(movieId);
+    let details;
+    try {
+        details = await getMovieDetails(movieId);
+    } catch {
+        notFound();
+    }
+
     const archivedMedia = await getMediaById(movieId);
     
     return(
