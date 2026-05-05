@@ -3,10 +3,12 @@
 
 :root {
   --color-background: radial-gradient(ellipse at top, #5719198c, transparent 60%), linear-gradient(180deg, hsl(0 0% 9%), hsl(0 0% 6%));
-  --foreground: #d3d2d2;
+  --color-text1: #d3d2d2;
+  --color-text2: #a69e96;
+  --color-primary-red: #962c2c;
+  --shadow-elegant: 0 20px 50px -20px hsl(0 70% 10% / .7);
   --font-fraunces: 'Fraunces', 'Times New Roman';
   --font-inter: 'Inter', 'Arial';
-
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -19,7 +21,7 @@
 body {
   min-height: 100vh;
   background: var(--color-background);
-  color: var(--foreground);
+  color: var(--color-text1);
   font-family: var(--font-inter);
   font-size: 16px;
 }
@@ -28,7 +30,10 @@ h1 {
   font-family: var(--font-fraunces);
   font-size: 24px;
   font-weight: 600;
+}
 
+h3 {
+  font-family: var(--font-fraunces);
 }
 
 button {
@@ -37,4 +42,16 @@ button {
 
 dialog {
   padding: 0;
+}
+
+.card-bg {
+  background: linear-gradient(160deg, hsl(0 0% 11%) 0%, hsl(0 0% 8%) 100%);;
+}
+
+.card-bg:hover h3 {
+  color: var(--color-primary-red);
+}
+
+.card-bg:hover {
+  box-shadow: 0 0 40px hsl(0 55% 38% / .25);
 }

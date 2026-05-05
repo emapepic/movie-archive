@@ -47,7 +47,7 @@ export default function AccountMenu() {
             </div>
 
             {isOpen && (
-                <div className="hidden absolute right-0 mt-2 w-40 md:flex flex-col items-start gap-5 p-5 bg-background border border-foreground rounded-lg">
+                <div className="hidden absolute right-0 mt-2 w-40 md:flex flex-col items-start gap-5 p-5 bg-background border border-text1 rounded-lg">
                     <Link href='/profile' onClick={() => setIsOpen(false)}>✎ Edit profile</Link>
                     <button onClick={handleLogout}>➜] Logout</button>
                 </div>

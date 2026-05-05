@@ -60,30 +60,38 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 p-6 gap-5">
             {media.map(item => (
-                    <div key={item.id} className="flex flex-row gap-5">
-                        <Link href={`/${item.mediaTypeDisplay === 'Movie' ? 'movies' : 'series'}/${item.id}`} className="cursor-pointer hover:opacity-75">
-                            <Image
-                                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                                alt={item.mediaTitle}
-                                width={180}
-                                height={100}
-                                className="w-30"
-                            />
-                        </Link>
-                        <div className="flex flex-col self-center gap-3">
-                            <h3>{item.mediaTitle}</h3>
-                            <p>{new Date(item.mediaDate).toLocaleDateString('en-GB')}</p>
-                            {showMediaType && (
-                                <p className={`w-fit px-3 font-bold rounded-2xl ${setMediTypeColor(item.mediaTypeDisplay)}`}>{item.mediaTypeDisplay}</p>
-                            )}
-                            {showStatus && (
-                                <p className={`w-fit px-3 font-bold capitalize rounded-2xl ${setStatusColor(item.status)}`}>{item.status}</p>
-                            )}
-                            <p>{item.user_opinion}</p>
+                    <div key={item.id} className="flex flex-row items-stretch gap-5 p-5 card-bg border border-white/35 rounded-2xl shadow-elegant cursor-pointer transition-all duration-300 ease-in-out hover:shadow-glow">
+                        <Image
+                            src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                            alt={item.mediaTitle}
+                            width={180}
+                            height={100}
+                            className="w-30 rounded-xl"
+                        />
+                        <div className="flex flex-col justify-between gap-3">
+                            <div className="flex flex-row gap-2">
+                                {showMediaType && (
+                                    <p className={`w-fit px-2.5 py-0.5 text-[11px] uppercase border rounded-full ${setMediTypeColor(item.mediaTypeDisplay)}`}>{item.mediaTypeDisplay}</p>
+                                )}
+                                {showStatus && (
+                                    <p className={`w-fit px-2.5 py-0.5 text-[11px] uppercase border rounded-full ${setStatusColor(item.status)}`}>{item.status}</p>
+                                )}
+                            </div>
+                            <h3 className="text-2xl font-bold leading-tight transition-all duration-300 ease-in-out">{item.mediaTitle}</h3>
+                            <span className="text-(--color-text2) text-sm">{new Date(item.mediaDate).getFullYear()}</span>
+                            {/* <p>{item.user_opinion}</p> */}
                             {item.user_rating > 0 && <StarDisplay rating={item.user_rating} />}
-                            {item.status === 'watchlist' && (
-                                <ChangeStatusButton id={item.id} />
-                            )}
+                            <div className="flex flex-col md:flex-row gap-2">
+                                {item.status === 'watchlist' && (
+                                    <ChangeStatusButton id={item.id} />
+                                )}
+                                <Link 
+                                    href={`/${item.mediaTypeDisplay === 'Movie' ? 'movies' : 'series'}/${item.id}`} 
+                                    className="w-fit py-2 px-3 text-md font-semibold rounded-xl hover:bg-(--color-primary-red)"
+                                >
+                                    Details →
+                                </Link>
+                            </div>
                         </div>
                     </div>
             ))}
