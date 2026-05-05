@@ -39,9 +39,15 @@ export default function AccountMenu() {
 
     return (
         <div ref={menuRef} className="relative">
-            <Image src={accountIcon} alt="account" width={30} height={30} className="cursor:pointer" onClick={() => setIsOpen(prev => !prev)} />
+            <Image src={accountIcon} alt="account" width={30} height={30} className="hidden md:block cursor:pointer" onClick={() => setIsOpen(prev => !prev)} />
+            
+            <div className="md:hidden flex flex-col items-end gap-5">
+                <Link href='/profile' onClick={() => setIsOpen(false)}>✎ Edit profile</Link>
+                <button onClick={handleLogout}>➜] Logout</button>
+            </div>
+
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-40 flex flex-col items-start gap-5 p-5 bg-background border border-foreground rounded-lg">
+                <div className="hidden absolute right-0 mt-2 w-40 md:flex flex-col items-start gap-5 p-5 bg-background border border-foreground rounded-lg">
                     <Link href='/profile' onClick={() => setIsOpen(false)}>✎ Edit profile</Link>
                     <button onClick={handleLogout}>➜] Logout</button>
                 </div>
