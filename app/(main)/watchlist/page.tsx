@@ -9,7 +9,7 @@ export default async function Watchlist({searchParams}: {searchParams: Promise<{
     return (
         <>
             <div className="flex flex-row justify-between p-6">
-                <h1>Watchlist</h1>
+                <h2>Watchlist</h2>
                 <MediaPageClient label="Add Entry" type="movie" hideStatus={true} allowBothTypes={true} />
             </div>
             <FilterMedia showTypeFilter={true} />

@@ -9,7 +9,7 @@ export default async function Movies({searchParams}: {searchParams: Promise<{sta
     return (
         <>
             <div className="flex flex-row justify-between p-6">
-                <h1>Movies</h1>
+                <h2>Movies</h2>
                 <MediaPageClient label="Add Movie" type="movie" />
             </div>
             <FilterMedia showStatusFilter={true} />
