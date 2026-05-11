@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import toast from 'react-hot-toast';
 import accountIcon from "@/public/images/account-icon.svg";
+import penIcon from "@/public/images/pen-icon.svg";
 
 export default function AccountMenu() {
     const [isOpen, setIsOpen] = useState(false);
@@ -42,13 +43,19 @@ export default function AccountMenu() {
             <Image src={accountIcon} alt="account" width={30} height={30} className="hidden md:block cursor:pointer" onClick={() => setIsOpen(prev => !prev)} />
             
             <div className="md:hidden flex flex-col items-end gap-5">
-                <Link href='/profile' onClick={() => setIsOpen(false)}>✎ Edit profile</Link>
+                <Link href='/profile' className="flex flex-row gap-2" onClick={() => setIsOpen(false)}>
+                    <Image src={penIcon} alt="pen" width={15} height={15} />
+                    Edit profile
+                </Link>
                 <button onClick={handleLogout}>➜] Logout</button>
             </div>
 
             {isOpen && (
                 <div className="hidden absolute right-0 mt-2 w-40 md:flex flex-col items-start gap-5 p-5 bg-background border border-text1 rounded-lg">
-                    <Link href='/profile' onClick={() => setIsOpen(false)}>✎ Edit profile</Link>
+                    <Link href='/profile' className="flex flex-row gap-2" onClick={() => setIsOpen(false)}>
+                        <Image src={penIcon} alt="pen" width={15} height={15} />
+                        Edit profile
+                    </Link>
                     <button onClick={handleLogout}>➜] Logout</button>
                 </div>
             )}
