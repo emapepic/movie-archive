@@ -58,7 +58,7 @@ export default function MediaDetails(
               alt={title}
               width={100}
               height={180}
-              className="w-full md:w-100 lg:w-70 rounded-xl self-start"
+              className="w-60 mx-auto md:w-100 lg:w-70 rounded-xl self-start"
             />
             <div className="flex flex-col self-center gap-3">
               <div className='flex flex-row gap-2'>
@@ -117,19 +117,19 @@ export default function MediaDetails(
                       </button>
                   </div>
                 </div>
-              ) : (
-                <div className='flex flex-col gap-2 px-6 py-4 bg-[#1c1c1c] border border-[#333] rounded-lg'>
-                  <h3 className='text-2xl font-bold'>Your opinion</h3>
-                  <p>{opinion}</p>
-                  {rating > 0 && (
-                    <div className='mt-2'>
-                      <span className='uppercase text-(--color-text2) text-sm'>your rating</span>
-                      <StarDisplay rating={rating} />
-                    </div>
-                  )}
-                  
-                </div>
-              )}
+              ) : 
+                (opinion || rating > 0) && (
+                  <div className='flex flex-col gap-2 px-6 py-4 bg-[#1c1c1c] border border-[#333] rounded-lg'>
+                    <h3 className='text-2xl font-bold'>Your opinion</h3>
+                    {opinion && <p>{opinion}</p>}
+                    {rating > 0 && (
+                      <div className='mt-2'>
+                        <span className='uppercase text-(--color-text2) text-sm'>your rating</span>
+                        <StarDisplay rating={rating} />
+                      </div>
+                    )}
+                  </div>
+                )}
 
               {status === 'watchlist' && (
                 <ChangeStatusButton id={id} />
