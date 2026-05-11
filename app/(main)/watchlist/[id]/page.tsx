@@ -36,6 +36,7 @@ export default async function MovieDetails({params}: {params: Promise<{id: strin
             userOpinion={archivedMedia?.user_opinion}
             userRating={archivedMedia?.user_rating}
             status={archivedMedia.status}
+            mediaType={archivedMedia.media_type}
         />
     );
 }
