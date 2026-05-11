@@ -60,7 +60,11 @@ export default async function MediaDisplay({ type, status, limit, orderBy, showS
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 p-6 gap-5">
             {media.map(item => (
-                    <div key={item.id} className="flex flex-row items-stretch gap-5 p-5 card-bg border border-white/35 rounded-2xl shadow-elegant transition-all duration-300 ease-in-out hover:shadow-glow">
+                    <div 
+                        key={item.id} 
+                        className="flex flex-row items-stretch gap-5 p-5 
+                                    card-bg border border-white/35 rounded-2xl shadow-elegant 
+                                    transition-all duration-300 ease-in-out md:hover:shadow-glow">
                         <Image
                             src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                             alt={item.mediaTitle}
