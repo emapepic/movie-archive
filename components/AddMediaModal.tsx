@@ -139,10 +139,10 @@ export default function AddMediaModal({
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-            <div className="flex flex-col gap-2 w-[90vw] max-w-md p-6 bg-white rounded-xl shadow-xl text-black md:w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-col gap-2 w-[90vw] max-w-md p-6 bg-[#121212] border border-[#333] rounded-xl shadow-xl text-(--color-text1) md:w-full" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">Add {allowBothTypes ? 'Media' : type === 'movie' ? 'Movie' : 'Series'}</h2>
-                    <button onClick={onClose} className="hover:text-black">✕</button>
+                    <h2 className="text-md! font-semibold">Add {allowBothTypes ? 'Media' : type === 'movie' ? 'Movie' : 'Series'}</h2>
+                    <button onClick={onClose} className="hover:text-[#962c2c]">✕</button>
                 </div>
 
                 {allowBothTypes && (
@@ -168,12 +168,12 @@ export default function AddMediaModal({
                         placeholder={`Search for a ${allowBothTypes ? 'media' : type === 'movie' ? 'movie' : 'series'}...`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-amber-950"
+                        className="w-full mb-2 border border-[#333] rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-[#962c2c]"
                         autoFocus
                     />
 
                     {isDropdownOpen && (
-                        <ul className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg max-h-72 overflow-y-auto z-10">
+                        <ul className="absolute top-full left-0 right-0 mt-1 bg-[#121212] border rounded-lg shadow-lg max-h-72 overflow-y-auto z-10 scrollbar-hide">
                             {isLoading && (
                                 <li className="px-3 py-2 text-sm">Searching...</li>
                             )}
@@ -184,7 +184,7 @@ export default function AddMediaModal({
                                 <li
                                     key={item.id}
                                     onClick={() => {setSelectedMedia(item); setIsDropdownOpen(false);}}
-                                    className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                                    className="flex items-center gap-3 px-3 py-2 hover:bg-[#9b513b] cursor-pointer"
                                 >
                                     <MediaOption item={item} />
                                 </li>
@@ -198,7 +198,7 @@ export default function AddMediaModal({
                 )}
 
                 {!hideStatus && (
-                    <>
+                    <div className="flex flex-row gap-4 mb-2">
                         <div className="flex flex-row gap-2">
                             <input
                                 id="status-watched" 
@@ -207,6 +207,7 @@ export default function AddMediaModal({
                                 value="watched"
                                 checked={status === "watched"}
                                 onChange={(e) => setStatus(e.target.value)}
+                                className="accent-[#962c2c]"
                             />
                             <label htmlFor="status-watched">Watched</label>
                         </div>
@@ -218,10 +219,11 @@ export default function AddMediaModal({
                                 value="watchlist"
                                 checked={status === "watchlist"}
                                 onChange={(e) => setStatus(e.target.value)}
+                                className="accent-[#962c2c]"
                             />
                             <label htmlFor="status-watchlist">Watchlist</label>
                         </div>
-                    </>
+                    </div>
                 )}
 
                 {(status === 'watched') && (
@@ -231,20 +233,25 @@ export default function AddMediaModal({
                             onChange={(e) => setUserOpinion(e.target.value)}
                             rows={3} 
                             placeholder="Your thoughts.." 
-                            className="p-2 border rounded-lg outline-none focus:ring-2 focus:ring-amber-950"
+                            className="p-2 border border-[#333] rounded-lg outline-none focus:ring-1 focus:ring-[#962c2c]"
                         />
 
                         <StarRating rating={userRating} onRate={setUserRating} />
                     </>
                 )}                
 
-                <button 
-                    onClick={() => handleAddEntry(selectedMedia, status, userOpinion, userRating)} 
-                    disabled={!selectedMedia}
-                    className="w-fit px-3 py-2 border rounded-xl shadow-2xl"
-                >
-                    Add {allowBothTypes ? 'Media' : type === 'movie' ? 'Movie' : 'Series'}
-                </button>
+                <div className="flex flex-row gap-5 ml-auto text-[15px]">
+                    <button onClick={onClose} className="font-semibold">
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={() => handleAddEntry(selectedMedia, status, userOpinion, userRating)} 
+                        disabled={!selectedMedia}
+                        className="w-fit px-3 py-2 font-semibold bg-[#962c2c] rounded-lg hover:bg-[#7a2424]"
+                    >
+                        Add {allowBothTypes ? 'Media' : type === 'movie' ? 'Movie' : 'Series'}
+                    </button>
+                </div>
             </div>
         </div>
     );

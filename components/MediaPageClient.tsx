@@ -12,9 +12,9 @@ export default function MediaPageClient({
         <>
             <button 
                 onClick={() => setIsModalOpen(true)}
-                className="px-3 py-2 border border-white rounded-xl"
+                className="h-fit px-3 py-2 bg-[#1c1c1c] md:text-[16px] border border-[#333] rounded-lg hover:bg-[#9b513b]"
             >
-                {label}
+                + {label}
             </button>
             <AddMediaModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} type={type} hideStatus={hideStatus} allowBothTypes={allowBothTypes} />
         </>
