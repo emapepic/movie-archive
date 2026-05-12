@@ -9,8 +9,6 @@ import ChangeStatusButton from './ChangeStatusButton';
 import DeleteModal from './DeleteModal';
 import StarRating from './StarRating';
 import toast from 'react-hot-toast';
-import penIcon from '@/public/images/pen-icon.svg'
-import trashcanIcon from '@/public/images/trashcan-icon.svg'
 
 function setStatusColor(status: string) {
     return status === "watched" 
@@ -78,13 +76,13 @@ export default function MediaDetails(
                 <button 
                   onClick={() => setIsEditing(true)} 
                   className="flex flex-row items-center gap-2 px-3 py-1 bg-[#000007] md:text-[14px] border border-[#333] rounded-lg hover:bg-[#9b513b]">
-                    <Image src={penIcon} alt='pen' width={15} height={15} />
+                    <img src='/images/pen-icon.svg' alt='pen' width={15} height={15} />
                     Edit
                 </button>
                 <button 
                   className="flex flex-row items-center gap-2 px-3 py-1 md:text-[14px] rounded-lg text-[#d80000] hover:bg-[#9b513b] hover:text-(--color-text1)" 
                   onClick={() => setIsModalOpen(true)}>
-                    <Image src={trashcanIcon} alt='trash can' width={15} height={15} />
+                    <img src='/images/trashcan-icon.svg' alt='trash can' width={15} height={15} />
                     Delete
                   </button>
                 <DeleteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} id={id} />
