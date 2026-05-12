@@ -146,16 +146,16 @@ export default function AddMediaModal({
                 </div>
 
                 {allowBothTypes && (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mb-2">
                         <button
                             onClick={() => setActiveType('movie')}
-                            className={`px-3 py-1 rounded-lg border ${activeType === 'movie' ? 'bg-amber-950 text-white' : ''}`}
+                            className={`px-3 py-1 rounded-lg border border-[#333] ${activeType === 'movie' ? 'bg-[#962c2c] text-white' : ''}`}
                         >
                             Movie
                         </button>
                         <button
                             onClick={() => setActiveType('tv')}
-                            className={`px-3 py-1 rounded-lg border ${activeType === 'tv' ? 'bg-amber-950 text-white' : ''}`}
+                            className={`px-3 py-1 rounded-lg border border-[#333] ${activeType === 'tv' ? 'bg-[#962c2c] text-white' : ''}`}
                         >
                             Series
                         </button>

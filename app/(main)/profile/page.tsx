@@ -52,10 +52,13 @@ export default function Profile() {
     if (loading) return <p>Loading...</p>;
 
     return (
-        <div className="flex items-center justify-center w-full h-[80vh]">
-            <div className="flex flex-col items-center justify-center gap-5 w-1/2 p-5 bg-amber-900 rounded-xl border border-white">
-                <h1>Edit Profile</h1>
-                <div className="flex flex-col justify-start gap-2">
+        <div className="flex flex-col items-center justify-center gap-5 w-full h-[80vh]">
+            <div className="w-1/2">
+                <h1 className="text-4xl!">Edit Profile</h1>
+            </div>
+            
+            <div className="flex flex-col items-center justify-center gap-5 w-[85%] md:w-1/2 p-8 bg-[#1c1c1c] rounded-xl border border-[#333]">
+                <div className="flex flex-col justify-start gap-2 w-full">
                     <label htmlFor="email">Email</label>
                     <input 
                         type="email" 
@@ -63,9 +66,9 @@ export default function Profile() {
                         id="email" 
                         value={email}
                         disabled
-                        className="border border-white rounded-sm" />
+                        className="p-2 border border-[#333] rounded-sm" />
                 </div>
-                <div className="flex flex-col justify-start gap-2">
+                <div className="flex flex-col justify-start gap-2 w-full">
                     <label htmlFor="password">Password</label>
                     <input 
                         type="password" 
@@ -75,14 +78,14 @@ export default function Profile() {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••" 
                         disabled={isDisabled} 
-                        className="border border-white rounded-sm" />
+                        className="p-2 border border-[#333] rounded-sm outline-none focus:ring-1 focus:ring-[#962c2c]" />
                 </div>
                 {message && <p className="text-sm">{message}</p>}
                 <div className="flex flex-row gap-5">
-                    <button onClick={handleEdit} className="p-2 border border-white rounded-lg">
+                    <button onClick={handleEdit} className={!isEditing ? 'py-1 px-3 bg-[#962c2c] rounded-lg hover:bg-[#7a2424]' : ''}>
                         {isEditing ? 'Cancel' : 'Edit profile'}
                     </button>
-                    {isEditing && <button onClick={handleSave} className="p-2 border border-white rounded-lg">Save</button>}
+                    {isEditing && <button onClick={handleSave} className="py-1 px-3 bg-[#962c2c] rounded-lg hover:bg-[#7a2424]">Save</button>}
                 </div>
             </div>
         </div>
