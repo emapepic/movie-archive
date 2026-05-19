@@ -20,20 +20,13 @@ export default function RegisterPage() {
 
         const { data, error } = await supabase.auth.signUp({ email, password });
 
-        if (data.user) {
-            await supabase.from('users').insert([
-                { 
-                id: data.user.id,
-                email: email
-                }
-            ]);
-        }
-
         if (error) {
-            toast.error('Error' + error.message);
+            toast.error('Error: ' + error.message);
+        } else if (data.user && data.user.identities?.length === 0) {
+            toast.error('Account already exists. Check your email.');
         } else {
-            toast.success('Registration successful!');
-            router.push("/login");
+            toast.success('Check your email to confirm your account!');
+            router.push("/check-email");
         }
         
         setLoading(false);
