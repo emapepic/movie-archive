@@ -33,7 +33,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-4 w-full">
+        <div className="flex flex-col items-center justify-center gap-4 w-full p-4 bg-[#121212] border border-[#333] rounded-xl">
             <h1 className="self-start">Login</h1>
             <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-2 w-3/4">
                 <input 
@@ -41,7 +41,7 @@ export default function LoginPage() {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="border border-amber-50 p-1.5 rounded-sm"
+                    className="border border-[#333] p-1.5 rounded-sm outline-none focus:ring-1 focus:ring-[#962c2c]"
                     required
                 />
                 <input 
@@ -49,16 +49,16 @@ export default function LoginPage() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="border border-amber-50 p-1.5 rounded-sm"
+                    className="border border-[#333] p-1.5 rounded-sm outline-none focus:ring-1 focus:ring-[#962c2c]"
                     required
                 />
-                <button disabled={loading} className="w-fit px-4 mt-2 bg-[#29395c] rounded-sm shadow-lg">
+                <button disabled={loading} className="w-fit mt-2 py-1 px-4 bg-[#962c2c] rounded-lg hover:bg-[#7a2424]">
                     Login
                 </button>
             </form>
             <div className="flex flex-row gap-2">
                 <p>Don&apos;t have an account?</p>
-                <Link href="/register" className="text-blue-700">Register here</Link>
+                <Link href="/register" className="text-[#9b513b]">Register here</Link>
             </div>
         </div>
     );
