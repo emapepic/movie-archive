@@ -53,7 +53,7 @@ export default function LoginPage() {
                     required
                 />
                 <button disabled={loading} className="w-fit mt-2 py-1 px-4 bg-[#962c2c] rounded-lg hover:bg-[#7a2424]">
-                    Login
+                    {loading ? 'Logging in...' : 'Login'}
                 </button>
             </form>
             <div className="flex flex-row gap-2">
